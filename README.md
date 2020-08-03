@@ -1,13 +1,13 @@
 # Jedi Academy Monitoring Discord Bot
 
-## Установка и использование
+## Installation and use
 
 ```
 npm install && npm start
 ```
 
-## Настройки
-Для передачи параметров используются следующие переменные окружения
+## Settings
+The following environment variables are used to pass parameters
 - ```DISCORD_TOKEN```
 - ```FIREBASE_API_KEY```
 - ```FIREBASE_AUTH_DOMAIN```
@@ -17,7 +17,7 @@ npm install && npm start
 - ```FIREBASE_MESSAGING_SENDER_ID```
 - ```FIREBASE_APP_ID```
 
-## Скрипты
-Для запуска доступны следующие команды
-- ```npm start``` — запуск в продуктовом режиме
-- ```npm run dev``` — запуск в режиме разработки с отслеживанием изменений и автоматическим перезапуском
+## Scripts
+The following commands are available to run
+- ```npm start``` — launch in production mode
+- ```npm run dev``` — run in development mode with change tracking and automatic restart
