@@ -1,0 +1,21 @@
+{
+  "name": "nodejs-jka",
+  "version": "1.0.0",
+  "description": "nodejs discord bot for jk",
+  "main": "node/node.js",
+  "scripts": {
+    "start": "node node/node.js",
+    "dev": "nodemon -r dotenv/config node/node.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "mai",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "firebase": "^7.15.5"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.4"
+  }
+}
