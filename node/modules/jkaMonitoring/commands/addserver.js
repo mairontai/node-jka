@@ -53,7 +53,8 @@ module.exports = function ({discord, db}) {
                     ref.child("servers")
                         .set(obj)
                         .catch(console.error);
-                }).catch(console.error);
+                })
+                .catch(console.error);
         }
     });
 };

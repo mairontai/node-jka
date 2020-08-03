@@ -1,9 +1,11 @@
 ## Commands
 
 ```
+!addserver (добавить индекс)
+!changeserver (возможность по "ключу" изменять параметры сервера (пароль, индекс, т.д.))
 !listservers
 !rebuild
-!remserver
+!remserver (обработать исключения нормально)
 !restart
 ```
 

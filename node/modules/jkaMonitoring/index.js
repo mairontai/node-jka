@@ -7,7 +7,9 @@ module.exports = ({discord, db}) => {
 
     discord.on("ready", async () => {
 
+        //initialize commands
         require("./commands/addserver")({discord, db});
+        require("./commands/remserver")({discord, db});
 
         discord.guilds.cache.map(async guild => {
             readServers({db, guild});
@@ -68,13 +70,15 @@ module.exports = ({discord, db}) => {
                                     };
                                     editMessage(msg, serversInDb[prop]);
                                     timerId = setTimeout(tick, 1000 * 60)
-                                });
-                            }).catch((e) => {
-                            clearTimeout(timerId);
-                            console.error(e);
-                        })
+                                }, 1000);
+                            })
+                            .catch((e) => {
+                                clearTimeout(timerId);
+                                console.error(e);
+                            })
                     }
-                }).catch(console.error);
+                })
+                .catch(console.error);
         } catch (e) {
             console.log(JSON.stringify(e));
         }
