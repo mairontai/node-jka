@@ -21,3 +21,7 @@ The following environment variables are used to pass parameters
 The following commands are available to run
 - ```npm start``` — launch in production mode
 - ```npm run dev``` — run in development mode with change tracking and automatic restart
+
+## Get firebase credentials
+
+https://firebase.google.com/docs/web/setup
