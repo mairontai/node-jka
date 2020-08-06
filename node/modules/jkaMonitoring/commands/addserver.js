@@ -1,37 +1,27 @@
+const getDiscordId = require("../../../../utils/getDiscordId.js");
+
 module.exports = function ({discord, db}) {
     discord.on("message", async message => {
         const content = message.content;
         if (content.startsWith("!addserver")) {
             const args = content
-                .slice(content.split(/ +/)[0].length + 1)
                 .split(/ +/);
 
-            if (args.length === 1) {
+            if (args.length < 5) {
                 return message.reply(
-                    "Usage: `!addserver #textChannel serverName serverAddress serverPassword`"
+                    "Usage: `cmd <#textChannel> <serverIp:port> <serverName> <password or null> [serverIndex]`" +
+                    "\n `cmd #mon 127.0.0.1:29071 eslhome esl`" +
+                    "\n `cmd #membermon 127.0.0.1:29070 eslmain null 1`"
                 );
             }
 
-            if (args.length < 3 || args.length > 4) {
-                return message.reply("arguments err!");
+            const textChannel = getDiscordId.getTextChannel(discord, args[1]);
+            if (textChannel === undefined) {
+                return message.reply("Bad textChannel");
             }
 
-            /*const ipPortRegex = /^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3}):\d{5}$/gm;
-
-            if (!args[1].match(ipPortRegex)) {
-                return message.reply("Something wrong in **serverAddress**");
-            }*/
-
-            /*if (args.length === 4) {
-                if (!args[3].match(/\d+/gm)) {
-                    return message.reply("Something wrong in **serverIndex**");
-                }
-            }*/
-
             const ref = db.database().ref(message.guild.name);
-            const textChannel = await message.guild.channels.resolve(args[0].replace(/\D/g, ''));
-            const textChannelId = textChannel.id;
-            const messageSend = await message.guild.channels.resolve(textChannelId)
+            const messageSend = await message.guild.channels.resolve(textChannel.id)
                 .send("WIP");
             const messageId = messageSend.id;
 
@@ -42,13 +32,13 @@ module.exports = function ({discord, db}) {
                     if (obj === null) {
                         obj = {}
                     }
-                    obj[args[1]] = {
-                        name: args[1],
+                    obj[args[3]] = {
+                        name: args[3],
                         ip: args[2],
-                        pass: args[3],
+                        pass: args[4],
                         //index: args.length===3? 0 : parseInt(args[3]),
                         messageId: messageId,
-                        textChannelId: textChannelId
+                        textChannelId: textChannel.id
                     };
                     ref.child("servers")
                         .set(obj)
