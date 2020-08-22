@@ -3,9 +3,10 @@ const getDiscordId = require("../../../../utils/getDiscordId.js");
 module.exports = function ({discord, db}) {
     discord.on("message", async message => {
         const content = message.content;
-        if (content.startsWith("!addserver")) {
-            const args = content
-                .split(/ +/);
+
+        const args = content.split(/ +/);
+
+        if (args[0] === "!addserver") {
 
             if (args.length < 5) {
                 return message.reply(
@@ -20,31 +21,23 @@ module.exports = function ({discord, db}) {
                 return message.reply("Bad textChannel");
             }
 
-            const ref = db.database().ref(message.guild.name);
             const messageSend = await message.guild.channels.resolve(textChannel.id)
                 .send("WIP");
             const messageId = messageSend.id;
 
-            ref.child("servers")
-                .once("value")
-                .then(value => {
-                    let obj = value.val();
-                    if (obj === null) {
-                        obj = {}
-                    }
-                    obj[args[3]] = {
-                        name: args[3],
-                        ip: args[2],
-                        pass: args[4],
-                        //index: args.length===3? 0 : parseInt(args[3]),
-                        messageId: messageId,
-                        textChannelId: textChannel.id
-                    };
-                    ref.child("servers")
-                        .set(obj)
-                        .catch(console.error);
+            const collectionReference = db.collection(`${message.guild.name}-servers`).doc(args[3])
+
+            try {
+                await collectionReference.set({
+                    name: args[3],
+                    ip: args[2],
+                    pass: args[4],
+                    messageId: messageId,
+                    textChannelId: textChannel.id
                 })
-                .catch(console.error);
+            } catch (e) {
+                console.error(e)
+            }
         }
     });
 };

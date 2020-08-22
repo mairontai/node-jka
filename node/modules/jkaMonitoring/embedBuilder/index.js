@@ -22,7 +22,9 @@ module.exports.online = (msg, statusNet, HOST, PORT, PASSWORD) => {
     emb.setTimestamp(Date.now());
 
     msg.edit(null, emb)
-        .catch((e) => console.error(e));
+        .catch((e) => {
+            console.error(e);
+        });
 };
 
 module.exports.onlineShort = (msg, statusNet, HOST, PORT) => {
@@ -38,12 +40,16 @@ module.exports.onlineShort = (msg, statusNet, HOST, PORT) => {
     emb.setColor('#1c5717');
 
     msg.edit(null, emb)
-        .catch((e) => console.error(e));
+        .catch((e) => {
+            console.error(e);
+        });
 };
 
 module.exports.offline = (msg) => {
     const emb = new messageEmbed();
 
     msg.edit(null, emb)
-        .catch((e) => console.error(e));
+        .catch((e) => {
+            console.error(e);
+        });
 };

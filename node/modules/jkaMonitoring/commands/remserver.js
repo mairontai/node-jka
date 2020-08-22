@@ -1,38 +1,19 @@
 module.exports = function ({discord, db}) {
     discord.on("message", async message => {
         const content = message.content;
+        const args = content.split(/ +/);
 
-        if (!content.startsWith("!remserver")) return;
+        if (args[0] !== "!remserver") return
 
-        const args = content
-            .slice(content.split(/ +/)[0].length + 1)
-            .split(/ +/);
+        const collectionReference = await db.collection(`${message.guild.name}-servers`).doc(args[2])
+        const snapshot = await collectionReference.get()
+        const snapshotData = snapshot.data();
 
-        if (args.length !== 2) {
-            return message.reply("Usage: !remserver #textChannel serverName");
+        if (snapshotData === undefined) {
+            return message.reply(`Server not found`)
         }
 
-        const ref = db.database().ref(message.guild.name);
-        const textChannel = await message.guild.channels.resolve(args[0].replace(/\D/g, ''));
-
-        ref.child("servers").once("value")
-            .then(value => {
-                let obj = value.val();
-                if (obj === null) return message.reply("answer database is null");
-                let monMessage = textChannel.messages.cache.get(obj[args[1]].messageId);
-                delete obj[args[1]];
-                monMessage.delete();
-
-                ref.set(obj)
-                    .then(() => message.channel.send("Removed."))
-                    .catch((err) => {
-                        console.error(err);
-                        message.channel.send(JSON.stringify(err))
-                    });
-            })
-            .catch((err) => {
-                console.error(err);
-                message.channel.send(JSON.stringify(err))
-            });
+        await snapshot.ref.delete();
+        return message.reply(`**${snapshotData.name}** Removed.`)
     })
 }

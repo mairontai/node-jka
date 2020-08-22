@@ -2,13 +2,12 @@ const getStatusNet = require("./getStatusNet");
 const monEmbedBuilder = require("./embedBuilder");
 
 module.exports = ({discord, db}) => {
-
-    const serversInDb = {};
-
     discord.on("ready", async () => {
 
         //initialize commands
         require("./commands/addserver")({discord, db});
+        require("./commands/importjson")({discord, db});
+        require("./commands/exportjson")({discord, db});
         require("./commands/listservers")({discord, db});
         require("./commands/remserver")({discord, db});
 
@@ -19,60 +18,54 @@ module.exports = ({discord, db}) => {
         })
     });
 
-    async function editMessage(msg, server) {
-        getStatusNet(server.ip, server.port).then(async status => {
-            const message = await discord.channels.cache.get(server.textChannelId).messages
-                .fetch(server.messageId);
+    async function editMessage(message, serverProps) {
+        const ip = serverProps.ip.split(":")[0]
+        const port = serverProps.ip.split(":")[1]
+        getStatusNet(ip, port)
+            .then(async status => {
+                if (status.split("\n").length > 3) {
+                    return monEmbedBuilder.online(
+                        message,
+                        status,
+                        ip,
+                        port,
+                        serverProps.pass
+                    )
+                }
 
-            if (status.split("\n").length > 3) {
-                return monEmbedBuilder.online(
-                    message,
-                    status,
-                    server.ip,
-                    server.port,
-                    server.pass
-                )
-            }
+                if (status.split("\n").length === 3) {
+                    return monEmbedBuilder.onlineShort(
+                        message,
+                        status,
+                        ip,
+                        port
+                    )
+                }
 
-            if (status.split("\n").length === 3) {
-                return monEmbedBuilder.onlineShort(
-                    message,
-                    status,
-                    server.ip,
-                    server.port
-                )
-            }
+                return monEmbedBuilder.offline(message);
 
-            return monEmbedBuilder.offline(message);
-
-        })
+            })
+            .catch((e) => {
+                console.error(`err in call getstatus ${e.stack}`);
+            })
     }
 
     async function readServers({db, guild}) {
-        const ref = db.database().ref(guild.name);
+        const snapshot = db.collection(`${guild.name}-servers`).get();
 
-        ref.child("servers")
-            .once("value")
-            .then(async value => {
-                const obj = value.val();
+        (await snapshot).forEach((doc) => {
+            const serverName = doc.id;
+            const serverProps = doc.data()
+            const channel = guild.channels.resolve(serverProps.textChannelId);
 
-                for (let prop in obj) {
-                    const monitoringChannelId = obj[prop].textChannelId;
+            if (channel == null) {
+                return console.error(`something wrong with the text channel!!! (${serverName})`)
+            }
 
-                    discord.channels.cache.get(monitoringChannelId).messages.fetch(obj[prop].messageId)
-                        .then(msg => {
-                            serversInDb[prop] = {
-                                ip: obj[prop].ip.split(":")[0],
-                                port: obj[prop].ip.split(":")[1],
-                                pass: obj[prop].pass,
-                                messageId: obj[prop].messageId,
-                                textChannelId: obj[prop].textChannelId
-                            };
-                            editMessage(msg, serversInDb[prop]);
-                        })
-                        .catch(console.error);
-                }
-            })
-            .catch(console.error);
+            channel.messages.fetch(serverProps.messageId)
+                .then(msg => {
+                    editMessage(msg, serverProps);
+                })
+        })
     }
 }

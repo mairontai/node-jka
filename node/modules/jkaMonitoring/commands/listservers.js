@@ -1,40 +1,40 @@
 const Embed = require("discord.js").MessageEmbed;
-const getDiscordId = require("../../../../utils/getDiscordId.js");
 
 const emb = new Embed();
 
 module.exports = function ({discord, db}) {
     discord.on("message", async message => {
         const content = message.content;
-        if (content.startsWith("!listservers")) {
-            const ref = db.database().ref(message.guild.name);
-            const serversList = await ref.child("servers").once("value");
+        const args = content.split(/ +/);
+        if (args[0] !== "!listservers") return
 
-            let messageText = "";
-            let counter = 0;
+        const snapshot = db.collection(`${message.guild.name}-servers`).get();
 
-            for (let x in serversList.val()) {
-                let channel = discord.channels.cache.get(serversList.val()[x].textChannelId);
+        let messageText = "";
+        let counter = 0;
 
-                if (channel === undefined) {
-                    message.reply(`something wrong with the text channel!!! (${serversList.val()[x].name})`);
-                    continue;
-                }
+        (await snapshot).forEach((doc) => {
+            const serverName = doc.id;
+            const serverProps = doc.data()
+            const channel = discord.channels.resolve(serverProps.textChannelId)
 
-                messageText += channel.toString()
-                messageText += " : "
-                messageText += ++counter;
-                messageText += ") ";
-                messageText += serversList.val()[x].name;
-                messageText += " (`";
-                messageText += serversList.val()[x].ip;
-                messageText += "`)";
-                messageText += "\n";
+            if (channel == null) {
+                return message.reply(`something wrong with the text channel!!! (${serverName})`);
             }
+            messageText += channel.toString()
+            messageText += " : "
+            messageText += ++counter
+            messageText += ") "
+            messageText += serverName
+            messageText += " (`"
+            messageText += serverProps.ip
+            messageText += "`)";
+            messageText += "\n";
+        })
 
+        if (messageText !== "") {
             emb.setTitle("Servers list");
             emb.setDescription(messageText);
-
             message.channel.send(emb);
         }
     });
