@@ -9,13 +9,6 @@ npm install && npm start
 ## Settings
 The following environment variables are used to pass parameters
 - ```DISCORD_TOKEN```
-- ```FIREBASE_API_KEY```
-- ```FIREBASE_AUTH_DOMAIN```
-- ```FIREBASE_DATABASE_URL```
-- ```FIREBASE_PROJECT_ID```
-- ```FIREBASE_STORAGE_BUCKET```
-- ```FIREBASE_MESSAGING_SENDER_ID```
-- ```FIREBASE_APP_ID```
 
 ## Scripts
 The following commands are available to run
@@ -24,4 +17,6 @@ The following commands are available to run
 
 ## Get firebase credentials
 
-https://firebase.google.com/docs/web/setup
+https://firebase.google.com/docs/firestore/quickstart#initialize
+
+Section : **Initialize on your own server**
