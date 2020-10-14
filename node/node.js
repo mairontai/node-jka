@@ -1,5 +1,4 @@
 const Discord = require("discord.js");
-const logger = require("winston");
 
 const {DISCORD_TOKEN} = process.env.DISCORD_TOKEN;
 const {db} = require("../lib/db.js");
@@ -12,12 +11,10 @@ discord.on("ready", () => {
 
 // Init modules
 require("./modules/jkaMonitoring")({discord, db});
-
-// Init logger
-require("../utils/logger.js");
+require("./modules/logger")({discord, db})
 
 // Start
 discord.login(DISCORD_TOKEN)
     .catch((e) => {
-        logger.warn(`discord login ${e.stack}`);
+        console.error(`discord login ${e.stack}`)
     });

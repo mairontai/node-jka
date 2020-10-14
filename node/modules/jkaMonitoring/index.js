@@ -38,7 +38,8 @@ module.exports = ({discord, db}) => {
                         message,
                         status,
                         ip,
-                        port
+                        port,
+                        serverProps.pass
                     )
                 }
 
@@ -46,7 +47,7 @@ module.exports = ({discord, db}) => {
 
             })
             .catch((e) => {
-                console.error(`err in call getstatus ${e.stack}`);
+                console.error(`err in call getstatus ${e}`);
             })
     }
 

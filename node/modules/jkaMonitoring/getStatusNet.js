@@ -13,6 +13,10 @@ module.exports = async (HOST, PORT) => {
             socket.on('message', (msg, rinfo) => {
                 resolve(msg.toString());
             })
+
+            socket.on('error', (err => {
+                reject(err.toString())
+            }))
         });
         return await promise;
     }

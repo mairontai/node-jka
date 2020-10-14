@@ -27,16 +27,21 @@ module.exports.online = (msg, statusNet, HOST, PORT, PASSWORD) => {
         });
 };
 
-module.exports.onlineShort = (msg, statusNet, HOST, PORT) => {
+module.exports.onlineShort = (msg, statusNet, HOST, PORT, PASSWORD) => {
     const emb = new messageEmbed();
 
-    let title = emojiOnline + ' **';
+    let title = `${emojiOnline} **`
 
-    title += embFields.gameType(statusNet) + " | ";
-    title += embAuthor(statusNet) + " | ";
-    title += HOST + ":" + PORT + '**';
+    const greenDotEmoji = msg.client.emojis.cache.find(emoji => emoji.name === 'greendot')
+    if (greenDotEmoji !== undefined) {
+        title = `${greenDotEmoji} **`
+    }
+
+    title += embFields.gameType(statusNet) + " | "
+    title += embAuthor(statusNet)
 
     emb.setTitle(title);
+    emb.setFooter(`/connect ${HOST}:${PORT};password ${PASSWORD}`)
     emb.setColor('#1c5717');
 
     msg.edit(null, emb)
