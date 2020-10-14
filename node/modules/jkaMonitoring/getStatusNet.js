@@ -5,7 +5,7 @@ const TIMEOUT = 10;
 module.exports = async (HOST, PORT) => {
     async function getStatusNet() {
         const promise = new Promise((resolve, reject) => {
-            const packet = new Buffer.from("\xFF\xFF\xFF\xFFgetstatus", "latin1");
+            const packet = new Buffer.from("\xFF\xFF\xFF\xFFgetstatus monitoring", "latin1");
             const socket = dgram.createSocket('udp4');
 
             socket.send(packet, 0, packet.length, PORT, HOST);
@@ -14,16 +14,13 @@ module.exports = async (HOST, PORT) => {
                 resolve(msg.toString());
             })
 
-            socket.on('error', (err => {
-                reject(err.toString())
-            }))
         });
         return await promise;
     }
 
     async function getStatusNetTimeout() {
         const promise = new Promise(function (resolve, reject) {
-            setTimeout(reject("timeout"), 1000 * TIMEOUT);
+            setTimeout(reject, 1000 * TIMEOUT);
         });
         return await promise;
     }
