@@ -1,11 +1,11 @@
 module.exports = (host, port, password) => {
-    let address = host + ":" + port;
+    let address = host + ":" + port
     switch (password) {
         case "null":
-            return `To connect, type in console: "/connect ${address}"`;
+            return `/connect ${address}`
         case "private":
-            return `This is a private server`;
+            return `This is a private server`
         default:
-            return `To connect, type in console: "/connect ${address};password ${password}"`;
+            return `/connect ${address};password ${password}`
     }
-};
+}

@@ -47,7 +47,7 @@ module.exports = ({discord, db}) => {
 
             })
             .catch((e) => {
-                console.error(`err in call getstatus ${e}`);
+                console.error(`err in call getstatus ${e} : ${ip}:${port} (${serverProps.name})`);
             })
     }
 

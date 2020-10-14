@@ -23,7 +23,7 @@ module.exports = async (HOST, PORT) => {
 
     async function getStatusNetTimeout() {
         const promise = new Promise(function (resolve, reject) {
-            setTimeout(reject, 1000 * TIMEOUT);
+            setTimeout(reject("timeout"), 1000 * TIMEOUT);
         });
         return await promise;
     }
