@@ -1,6 +1,6 @@
 const dgram = require('dgram');
 
-const TIMEOUT = 5;
+const TIMEOUT = 10;
 
 module.exports = async (HOST, PORT) => {
     async function getStatusNet() {
