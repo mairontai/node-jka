@@ -7,7 +7,7 @@ const {db} = require("../lib/db.js");
 const discord = new Discord.Client();
 
 discord.on("ready", () => {
-    console.log(`Logged in as ${discord.user.tag}!`);
+    winston.info(`Logged in as ${discord.user.tag}!`);
 })
 
 // Init modules

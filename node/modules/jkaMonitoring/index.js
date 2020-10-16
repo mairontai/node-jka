@@ -47,7 +47,7 @@ module.exports = ({discord, db}) => {
 
             })
             .catch((e) => {
-                console.error(`${new Date().getMinutes()}:${new Date().getSeconds()} timeout : ${ip}:${port} (${serverProps.name})`);
+                winston.error(`${new Date().getMinutes()}:${new Date().getSeconds()} timeout : ${ip}:${port} (${serverProps.name})`);
             })
     }
 

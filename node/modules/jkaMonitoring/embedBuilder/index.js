@@ -25,7 +25,7 @@ module.exports.online = (msg, statusNet, HOST, PORT, PASSWORD) => {
 
     msg.edit(null, emb)
         .catch((e) => {
-            console.error(e);
+            winston.error(e);
         });
 };
 
@@ -49,7 +49,7 @@ module.exports.onlineShort = (msg, statusNet, HOST, PORT, PASSWORD) => {
 
     msg.edit(null, emb)
         .catch((e) => {
-            console.error(e);
+            winston.error(e);
         });
 };
 
@@ -58,6 +58,6 @@ module.exports.offline = (msg) => {
 
     msg.edit(null, emb)
         .catch((e) => {
-            console.error(e);
+            winston.error(e);
         });
 };
