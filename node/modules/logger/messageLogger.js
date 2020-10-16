@@ -2,13 +2,19 @@ const MessageEmbed = require('discord.js').MessageEmbed
 
 module.exports = ({discord, db}) => {
 
-    discord.on('ready', async () => {
+    const cleanOldMessages = async () => {
         discord.guilds.cache.map(async (guild) => {
             const snapshot = await db.collection(`${guild.name}-messages`).get()
             snapshot.forEach((doc) => {
                 doc.ref.delete()
             })
         })
+    }
+
+    discord.on('ready', async () => {
+        setInterval(async () => {
+            await cleanOldMessages()
+        }, 1000 * 60 * 60 * 10)
     })
 
     discord.on("message", async message => {
