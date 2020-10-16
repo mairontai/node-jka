@@ -44,7 +44,7 @@ module.exports.onlineShort = (msg, statusNet, HOST, PORT, PASSWORD) => {
     title += "**"
 
     emb.setTitle(title);
-    emb.setFooter(`/connect ${HOST}:${PORT};password ${PASSWORD}`)
+    emb.setFooter(embFooter(HOST, PORT, PASSWORD))
     emb.setColor('#1c5717');
 
     msg.edit(null, emb)
